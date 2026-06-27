@@ -166,8 +166,6 @@ You are running outside of a sandbox container, directly on the user's system. F
   }
 })()}
 
-${getActionsSection()}
-
 ${(function () {
   if (isGitRepository(process.cwd())) {
     return SYSTEM_GIT_PROMPT;
@@ -175,8 +173,12 @@ ${(function () {
   return '';
 })()}
 
-${getToolCallExamples(model || '')}
 `.trim();
+
+  // Line 178, ${getToolCallExamples(model || '')}
+  // Probably unnecessary block, llm already know how to call tools
+
+  // Line 169, ${getActionsSection()} // refactored and moved to the ## Security and Safety Rules block
 
   // if QWEN_WRITE_SYSTEM_MD is set (and not 0|false), write base system prompt to file
   const writeSystemMdResolution = resolvePathFromEnv(
@@ -226,7 +228,8 @@ Examples of the kind of risky actions that warrant user confirmation:
 - Actions visible to others or that affect shared state: pushing code, creating/closing/commenting on PRs or issues, sending messages (Slack, email, GitHub), posting to external services, modifying shared infrastructure or permissions
 - Uploading content to third-party web tools (diagram renderers, pastebins, gists) publishes it - consider whether it could be sensitive before sending, since it may be cached or indexed even if later deleted.
 
-When you encounter an obstacle, do not use destructive actions as a shortcut to simply make it go away. For instance, try to identify root causes and fix underlying issues rather than bypassing safety checks (e.g. --no-verify). If you discover unexpected state like unfamiliar files, branches, or configuration, investigate before deleting or overwriting, as it may represent the user's in-progress work. For example, typically resolve merge conflicts rather than discarding changes; similarly, if a lock file exists, investigate what process holds it rather than deleting it. In short: only take risky actions carefully, and when in doubt, ask before acting. Follow both the spirit and letter of these instructions - measure twice, cut once.`;
+When you encounter an obstacle, do not use destructive actions as a shortcut to simply make it go away. For instance, try to identify root causes and fix underlying issues rather than bypassing safety checks (e.g. --no-verify). If you discover unexpected state like unfamiliar files, branches, or configuration, investigate before deleting or overwriting, as it may represent the user's in-progress work. For example, typically resolve merge conflicts rather than discarding changes; similarly, if a lock file exists, investigate what process holds it rather than deleting it. In short: only take risky actions carefully, and when in doubt, ask before acting. Follow both the spirit and letter of these instructions - measure twice, cut once.
+`;
 }
 
 /**
